@@ -1,0 +1,82 @@
+{% extends "layouts/main.twig" %}
+{% block content %}
+    <main>
+        <div class="container">
+            <form id="search-form" method="GET" action="/">
+                <div>
+                    <input type="text" autocomplete="off" name="q" required="" spellcheck="false" placeholder="" value="" />
+                    <button type="submit"><i class="fas fa-search" aria-hidden="true"></i></button>
+                </div>
+Trending Today: 
+			{% for item in getTerms('5')['items'] %}
+                                <a href="{{ search_permalink(item) }}" class="badge badge-danger" style="margin-top:10px";>
+                                    <span class="flex-fill">{{ ucwords(item) }}</span>
+                                </a>
+                        {% endfor %}
+
+            </form>
+	<nav aria-label="breadcrumb">
+<ol class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList" style="background: none;">
+<li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="{{ site_url() }}" itemprop="item"><span itemprop="name">Home</span></a><meta itemprop="position" content="1" /></li>
+<li class="breadcrumb-item active" aria-current="page" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><span itemprop="name">{{ single['title'] }}</span><meta itemprop="position" content="2" /></li>
+</ol>
+</nav>
+            <div class="main-content d-flex">
+                <div id="content" class="single flex-fill" itemscope itemtype="https://schema.org/MusicAlbum">
+                    <h2 class="page-title" itemprop="name">Download {{ single['title'] }}</h2>
+                    <div class="image text-center">
+                        <img
+                            src="{{ photonResize('https://ytimg.googleusercontent.com/vi/' ~ single['id'] ~ '/mqdefault.jpg', '320', '180', 0) }}"
+                            alt="{{ single['title'] }}"
+                            title="{{ single['title'] }}"
+			    itemprop="image"
+                        />
+                    </div>
+                    <div class="player text-center">
+                        <audio src="https://www.youtube.com/watch?v={{ single['id'] }}" type="video/youtube" controls style="width: 100%;" itemprop="url">Your browser does not support the audio element.</audio>
+                    </div>
+                    <div class="details text-center">
+                        <p><i class="fas fa-clock" itemprop="duration"></i>Duration: <strong>{{ single['duration'] }}</strong></p>
+                        <p><i class="fas fa-download"></i>Size: <strong>{{ single['size'] }}</strong></p>
+                        <p><i class="fas fa-calendar" itemprop="genre"></i>Published: <strong>{{ toIsoFormat(single['publishedAt'], 'id_ID') }}</strong></p>
+                        <p><i class="fas fa-headphones"></i>Listen: <strong>{{ single['viewCount'] }}</strong></p>
+                        <p><i class="fas fa-thumbs-up"></i>Likes: <strong>{{ single['likeCount'] }}</strong></p>
+                    </div>
+                    <br/>
+                    <div class="d-flex justify-content-center">
+                        <div style="padding: 6px; border-radius: 4px; background: #00aaff; color: #ffffff; margin: 4px; width: 50%; max-width: 200px; height: auto; text-align: center;">
+                            <a href="{{ download_permalink(single['id']) }}" rel="nofollow" target="_blank"><i class="fas fa-download"></i> Download</a>
+                        </div>
+                    </div>
+                    <div class="content text-center">
+                        {{ autop(single['description'])|raw }}
+                    </div>
+                </div>
+                <div id="sidebar">
+                    <aside class="widget widget-terms">
+                        <h3 class="section-title">
+                            <span><i class="fas fa-search" aria-hidden="true"></i>Recent Search</span>
+                        </h3>
+                        <ul>
+                        {% for item in getTerms('30')['items'] %}
+                            <li>
+                                <a href="{{ search_permalink(item) }}" class="d-flex align-items-center">
+                                    <i class="fas fa-music"></i>
+                                    <span class="flex-fill">{{ ucwords(item) }}</span>
+                                </a>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </main>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/mediaelementplayer.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/mediaelement-and-player.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('audio').mediaelementplayer();
+        })
+    </script>
+{% endblock %}
